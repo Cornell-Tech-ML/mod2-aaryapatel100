@@ -29,19 +29,19 @@ class Network(minitorch.Module):
 class Linear(minitorch.Module):
     def __init__(self, in_size, out_size):
         super().__init__()
-        self.weights = RParam(in_size, out_size) 
+        self.weights = RParam(in_size, out_size)
         self.bias = RParam(out_size)
         self.out_size = out_size
 
     def forward(self, x: minitorch.Tensor):
         # batch_size, in_size = inputs.shape
         # out_size = self.weights.value.shape[1]
-        
+
         # input3 = inputs.view(batch_size, in_size, 1)
         # weight3 = self.weights.value.view(1, self.weights.value.shape[0], out_size)
         # return (input3 * weight3).sum(1).view(batch_size, out_size) + self.bias.value.view(out_size)
         batch, in_size = x.shape
-      
+
         return (
             self.weights.value.view(1, in_size, self.out_size)
             * x.view(batch, in_size, 1)
