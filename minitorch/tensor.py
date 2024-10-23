@@ -292,10 +292,34 @@ class Tensor:
 
     @property
     def parents(self) -> Iterable[Variable]:
+        """Retrieves the parent variables of the current tensor.
+
+        Returns
+        -------
+        Iterable[Variable]: An iterable of parent variables for the tensor.
+
+        """
         assert self.history is not None
         return self.history.inputs
 
     def chain_rule(self, d_output: Any) -> Iterable[Tuple[Variable, Any]]:
+        """Applies the chain rule to propagate derivatives to the parent variables.
+
+        This function computes the gradients for the parent variables by
+        applying the chain rule on the provided derivative with respect to
+        the output. It uses the backward method of the last function applied
+        to obtain the gradients with respect to the inputs.
+
+        Args:
+        ----
+        d_output: The derivative with respect to the output.
+
+        Returns:
+        -------
+        Iterable[Tuple[Variable, Any]]: An iterable of tuples where each tuple
+        contains a parent variable and its corresponding derivative value.
+
+        """
         h = self.history
         assert h is not None
         assert h.last_fn is not None
@@ -309,9 +333,25 @@ class Tensor:
         ]
 
     def zero_grad_(self) -> None:
+        """Set the gradient of the current tensor to None.
+
+        This is used to start a new backpropagation pass.
+
+        No return. Should write to its results to the derivative values of each leaf through
+        `accumulate_derivative`.
+
+        """
         self.grad = None
 
     def backward(self, grad_output: Optional[Tensor] = None) -> None:
+        """Calls autodiff to fill in the derivatives for the history of this object.
+
+        Args:
+        ----
+            grad_output (Tensor, opt): starting derivative to backpropagate through the model
+                                       (typically left out, and assumed to be 1.0).
+
+        """
         if grad_output is None:
             assert self.shape == (1,), "Must provide grad_output if non-scalar"
             grad_output = Tensor.make([1.0], (1,), backend=self.backend)
