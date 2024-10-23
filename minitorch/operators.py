@@ -189,7 +189,7 @@ def relu(x: float) -> float:
         float: `x` if `x` is positive, `0` otherwise.
 
     """
-    return max(0, x)
+    return max(0.0, x)
 
 
 def log(x: float) -> float:

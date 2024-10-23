@@ -125,8 +125,9 @@ class Sigmoid(Function):
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor]:
-        (output,) = ctx.saved_values
-        return (grad_output.f.mul_zip(output, output.f.add_zip(tensor([1]), output.f.neg_map(output))), )
+        (output, ) = ctx.saved_values
+        sig_grad = grad_output.f.mul_zip(output, grad_output.f.add_zip(tensor([1]), grad_output.f.neg_map(output)),)
+        return (grad_output.f.mul_zip(grad_output, sig_grad),)
 
 class ReLU(Function):
     @staticmethod
@@ -160,7 +161,7 @@ class Exp(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         (output,) = ctx.saved_values
-        return grad_output.f.mul_zip(output, grad_output)
+        return grad_output.f.mul_zip(grad_output, output)
 
 class Sum(Function):
     @staticmethod
@@ -262,7 +263,7 @@ class MatMul(Function):
         t1, t2 = ctx.saved_values
 
         def transpose(a: Tensor) -> Tensor:
-            order = list(range(a.dims()))
+            order = list(range(a.dims))  # type: ignore
             order[-2], order[-1] = order[-1], order[-2]
             return a._new(a._tensor.permute(*order))
 

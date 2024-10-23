@@ -17,3 +17,36 @@ python sync_previous_module.py previous-module-dir current-module-dir
 The files that will be synced are:
 
         minitorch/operators.py minitorch/module.py minitorch/autodiff.py minitorch/scalar.py minitorch/scalar_functions.py minitorch/module.py project/run_manual.py project/run_scalar.py project/datasets.py
+
+## MiniTorch 2.5 Results
+### Simple
+<table>
+  <tr>
+    <td><img src="SimpleInfo.png" alt="Simple Graph" width="300"/></td>
+    <td><img src="simpleLog.png" alt="Simple Loss" width="300"/></td>
+  </tr>
+</table>
+
+### Diag
+<table>
+  <tr>
+    <td><img src="DiagInfo.png" alt="Simple Graph" width="300"/></td>
+    <td><img src="DiagLogs.png" alt="Simple Loss" width="300"/></td>
+  </tr>
+</table>
+
+### Split
+<table>
+  <tr>
+    <td><img src="SplitInfo.png" alt="Simple Graph" width="500"/></td>
+    <td><img src="SplitLog.png" alt="Simple Loss" width="500"/></td>
+  </tr>
+</table>
+
+### XOR
+<table>
+  <tr>
+    <td><img src="XORInfo.png" alt="Simple Graph" width="500"/></td>
+    <td><img src="XORLog.png" alt="Simple Loss" width="500"/></td>
+  </tr>
+</table>
