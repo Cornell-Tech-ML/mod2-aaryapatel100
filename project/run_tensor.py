@@ -11,7 +11,41 @@ def RParam(*shape):
     r = 2 * (minitorch.rand(shape) - 0.5)
     return minitorch.Parameter(r)
 
-# TODO: Implement for Task 2.5.
+class Network(minitorch.Module):
+    def __init__(self, hidden_layers):
+        super().__init__()
+        self.layer1 = Linear(2, hidden_layers)
+        self.layer2 = Linear(hidden_layers, hidden_layers)
+        self.layer3 = Linear(hidden_layers, 1)
+
+    def forward(self, x):
+        # middle = [h.relu() for h in self.layer1.forward(x)]
+        # end = [h.relu() for h in self.layer2.forward(middle)]
+        # return self.layer3.forward(end)[0].sigmoid()
+        m1 = self.layer1.forward(x).relu()
+        m2 = self.layer2.forward(m1).relu()
+        return self.layer3.forward(m2).sigmoid()
+
+class Linear(minitorch.Module):
+    def __init__(self, in_size, out_size):
+        super().__init__()
+        self.weights = RParam(in_size, out_size)
+        self.bias = RParam(out_size)
+        self.out_size = out_size
+
+    def forward(self, x: minitorch.Tensor):
+        # batch_size, in_size = inputs.shape
+        # out_size = self.weights.value.shape[1]
+
+        # input3 = inputs.view(batch_size, in_size, 1)
+        # weight3 = self.weights.value.view(1, self.weights.value.shape[0], out_size)
+        # return (input3 * weight3).sum(1).view(batch_size, out_size) + self.bias.value.view(out_size)
+        batch, in_size = x.shape
+
+        return (
+            self.weights.value.view(1, in_size, self.out_size)
+            * x.view(batch, in_size, 1)
+        ).sum(1).view(batch, self.out_size) + self.bias.value.view(self.out_size)
 
 def default_log_fn(epoch, total_loss, correct, losses):
     print("Epoch ", epoch, " loss ", total_loss, "correct", correct)
